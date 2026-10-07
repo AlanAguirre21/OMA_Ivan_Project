@@ -29,7 +29,8 @@ const PORT = process.env.PORT || 3000;
  */
 const CERT = process.env.HTTPS_CERT || path.join(__dirname, '..', 'certs', 'oma.crt');
 const KEY = process.env.HTTPS_KEY || path.join(__dirname, '..', 'certs', 'oma.key');
-const USA_HTTPS = process.env.HTTPS !== '0' && fs.existsSync(CERT) && fs.existsSync(KEY);
+/*const USA_HTTPS = process.env.HTTPS !== '0' && fs.existsSync(CERT) && fs.existsSync(KEY);*/
+const USA_HTTPS = fs.existsSync(CERT) && fs.existsSync(KEY);
 
 // Frontend compilado (npm run build en frontend): se sirve desde el mismo servidor
 const CARPETA_WEB = process.env.FRONTEND_DIST || path.join(__dirname, '..', '..', 'frontend', 'dist');
