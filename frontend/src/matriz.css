@@ -1,0 +1,1030 @@
+/* =========================================================
+   MATRIZ OMA EN PISO
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   Chip: el mismo "input" para Planta, Objetivo, nodos
+   y promedios. Mismo tamaño, forma y estado vacío.
+   --------------------------------------------------------- */
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 9px;
+    color: #1d1d1f;
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.chip.decimal {
+    width: 52px;
+    font-size: 13px;
+}
+
+.chip.fuerte {
+    font-weight: 700;
+}
+
+.chip.vacio {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1.5px dashed rgba(60, 60, 67, 0.22);
+    color: var(--txt3);
+    box-shadow: none;
+}
+
+.chip.editable {
+    cursor: pointer;
+}
+
+.chip.editable:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.chip.editable.vacio:hover {
+    border-color: var(--accent);
+    background: rgba(0, 113, 227, 0.06);
+}
+
+.chip.pendiente {
+    border: 1.5px solid var(--danger);
+    background: var(--danger-soft);
+}
+
+.chip.activo {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--txt1);
+}
+
+.chip:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.5);
+}
+
+
+/* ---------------------------------------------------------
+   Tabla (escritorio)
+   --------------------------------------------------------- */
+
+.matriz-contenedor {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    padding: 0;
+}
+
+.matriz-oma {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+}
+
+.matriz-oma th {
+    padding: 9px 4px;
+    background: rgba(246, 246, 248, 0.85);
+    color: var(--txt2);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--divider);
+}
+
+.matriz-oma thead tr:first-child th {
+    color: var(--txt1);
+}
+
+.matriz-oma th.col-area {
+    border-bottom: 2px solid var(--accent);
+    letter-spacing: 0.02em;
+}
+
+.matriz-oma th.inicio-area,
+.matriz-oma th.col-area + th.col-area {
+    border-left: 1px solid var(--divider);
+}
+
+.matriz-oma th.col-criterio {
+    min-width: 210px;
+    padding-left: 14px;
+    text-align: left;
+}
+
+.matriz-oma th.col-nivel,
+.matriz-oma th.col-nodo {
+    width: 46px;
+}
+
+.matriz-oma th.col-promedio {
+    width: 64px;
+}
+
+.matriz-oma td {
+    border-bottom: 1px solid var(--divider);
+}
+
+.matriz-oma tbody tr:hover td {
+    background: rgba(0, 113, 227, 0.035);
+}
+
+.matriz-celda {
+    position: relative;
+    padding: 5px 4px;
+    text-align: center;
+}
+
+.matriz-criterio {
+    padding: 8px 14px;
+    color: var(--txt1);
+    line-height: 1.35;
+    text-align: left;
+}
+
+.matriz-criterio.total {
+    font-weight: 700;
+    text-align: right;
+    color: var(--txt2);
+}
+
+.matriz-criterio-numero {
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.matriz-info {
+    display: block;
+    margin-top: 3px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.matriz-info:hover {
+    text-decoration: underline;
+}
+
+.matriz-detalle td {
+    padding: 12px 16px;
+    background: rgba(246, 246, 248, 0.7);
+    color: var(--txt2);
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+.matriz-oma tfoot td {
+    background: rgba(246, 246, 248, 0.6);
+    border-top: 1px solid var(--divider);
+    border-bottom: 0;
+}
+
+/* Selector flotante (popover estilo macOS) */
+
+.matriz-selector {
+    position: absolute;
+    top: calc(100% - 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-lg);
+    animation: aparecer 0.12s ease both;
+}
+
+.matriz-selector.arriba {
+    top: auto;
+    bottom: calc(100% - 2px);
+}
+
+.matriz-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--txt2);
+}
+
+.matriz-leyenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.matriz-leyenda i {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+
+/* ---------------------------------------------------------
+   Tarjetas (móvil)
+   --------------------------------------------------------- */
+
+.matriz-tarjetas {
+    display: grid;
+    gap: 12px;
+}
+
+.tarjeta-criterio {
+    padding: 16px;
+}
+
+.tarjeta-criterio-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.tarjeta-info {
+    margin: 4px 0 0 -10px;
+}
+
+.tarjeta-que-evaluar {
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: var(--fill);
+    color: var(--txt2);
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
+.tarjeta-grupo {
+    margin-top: 14px;
+}
+
+.tarjeta-grupo-titulo {
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--txt3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tarjeta-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.campo-nivel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 0;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--hairline);
+}
+
+.campo-nivel > .chip {
+    width: 100%;
+}
+
+.campo-nivel.pendiente {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.campo-nivel-etiqueta {
+    padding-left: 2px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt1);
+    white-space: nowrap;
+}
+
+/* Segmentado 1 · 2 · 3: mismo control para todos los campos */
+
+.nivel-seg {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 10px;
+    background: var(--fill);
+}
+
+.nivel-seg button {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 36px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--txt2);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.nivel-seg button.activo {
+    color: #1d1d1f;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   BARRA DE ACCIONES
+   ========================================================= */
+
+.barra-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+}
+
+.barra-acciones-grupo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.barra-progreso {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.barra-progreso-texto {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--txt2);
+}
+
+.barra-progreso-nota {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--txt3);
+}
+
+.selector-evaluacion {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 280px;
+    max-width: 420px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--txt3);
+}
+
+
+/* =========================================================
+   FILTRO POR CRITERIO
+   ========================================================= */
+
+.filtro-criterios {
+    padding: 14px 18px;
+    margin-bottom: 18px;
+}
+
+.filtro-criterios-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 30px;
+    margin-bottom: 8px;
+}
+
+.filtro-criterios-titulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--txt3);
+}
+
+.filtro-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.filtro-chip {
+    min-height: 30px;
+    padding: 5px 12px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--txt1);
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filtro-chip:hover {
+    background: #fff;
+}
+
+.filtro-chip.activo {
+    border-color: transparent;
+    background: var(--accent);
+    color: #fff;
+}
+
+.filtro-criterios-resumen {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--txt2);
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   RESUMEN
+   ========================================================= */
+
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.resumen-tile {
+    padding: 14px 16px;
+}
+
+.resumen-tile-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--txt3);
+}
+
+.resumen-tile-valor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--txt1);
+    font-variant-numeric: tabular-nums;
+}
+
+.resumen-tile-valor i {
+    width: 12px;
+    height: 12px;
+    flex: none;
+    border-radius: 50%;
+}
+
+.resumen-tile-nota {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--txt3);
+}
+
+.graficas-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: 18px;
+    margin-top: 18px;
+    align-items: start;
+}
+
+.grafica-card {
+    padding: 20px;
+}
+
+.grafica-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.grafica-titulo {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--txt1);
+}
+
+.grafica-subtitulo {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--txt3);
+}
+
+
+/* Barras horizontales: escala fija 0 a 3 */
+
+.barra-fila {
+    display: grid;
+    grid-template-columns: 64px 1fr 44px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--txt2);
+}
+
+.barra-pista {
+    position: relative;
+    height: 20px;
+    border-radius: 0 6px 6px 0;
+    background: var(--fill);
+}
+
+.barra-relleno {
+    height: 100%;
+    border-radius: 0 6px 6px 0;
+}
+
+.barra-valor {
+    text-align: right;
+    font-weight: 700;
+    color: var(--txt1);
+    font-variant-numeric: tabular-nums;
+}
+
+.escala-ejes {
+    display: grid;
+    grid-template-columns: 64px 1fr 44px;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--txt3);
+}
+
+.escala-ejes .marcas {
+    position: relative;
+    height: 14px;
+}
+
+.escala-ejes .marcas span {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+
+/* ---------------------------------------------------------
+   Brecha Planta → Objetivo
+   --------------------------------------------------------- */
+
+.brecha-resumen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.brecha-resumen-item {
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--hairline);
+}
+
+.brecha-resumen-valor {
+    font-size: 22px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.brecha-resumen-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--txt2);
+}
+
+.brecha-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--txt2);
+}
+
+.brecha-leyenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.brecha-lista {
+    display: grid;
+}
+
+.brecha-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 0;
+    border-top: 1px solid var(--divider);
+}
+
+.brecha-criterio {
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--txt1);
+}
+
+.brecha-criterio-nombre {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--txt2);
+}
+
+/* Escala de 3 casillas: nivel 1, 2 y 3 */
+
+.brecha-escala {
+    display: grid;
+    grid-template-columns: repeat(3, 34px);
+    gap: 3px;
+}
+
+.brecha-casilla {
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Nivel alcanzado por la planta */
+.brecha-casilla.planta {
+    background: #2a78d6;
+    color: #fff;
+}
+
+/* Lo que falta para llegar al objetivo */
+.brecha-casilla.falta {
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(250, 178, 25, 0.38) 0 4px,
+        rgba(250, 178, 25, 0.12) 4px 8px
+    );
+    border: 1.5px solid #e09600;
+    color: #8a5a00;
+}
+
+/* Por encima del objetivo / fuera de alcance */
+.brecha-casilla.libre {
+    background: var(--fill);
+    color: var(--txt3);
+}
+
+.brecha-casilla.meta {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--txt1);
+}
+
+.brecha-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 136px;
+    justify-content: flex-start;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--txt1);
+}
+
+.brecha-estado.ok {
+    background: rgba(12, 163, 12, 0.12);
+}
+
+.brecha-estado.falta1 {
+    background: rgba(250, 178, 25, 0.20);
+}
+
+.brecha-estado.falta2 {
+    background: rgba(236, 131, 90, 0.22);
+}
+
+.brecha-estado.arriba {
+    background: rgba(42, 120, 214, 0.12);
+}
+
+.brecha-estado b {
+    font-variant-numeric: tabular-nums;
+    color: var(--txt2);
+    font-weight: 600;
+}
+
+.grafica-tabla {
+    margin-top: 14px;
+    font-size: 13px;
+}
+
+.grafica-tabla summary {
+    cursor: pointer;
+    color: var(--accent);
+}
+
+.grafica-tabla table {
+    width: 100%;
+    margin-top: 8px;
+    border-collapse: collapse;
+}
+
+.grafica-tabla th,
+.grafica-tabla td {
+    padding: 6px;
+    border-bottom: 1px solid var(--divider);
+    text-align: left;
+}
+
+.tooltip-grafica {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    max-width: 260px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(29, 29, 31, 0.92);
+    -webkit-backdrop-filter: var(--blur);
+    backdrop-filter: var(--blur);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.45;
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+
+.lista-evaluaciones {
+    display: grid;
+    gap: 10px;
+}
+
+.evaluacion-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+}
+
+.evaluacion-item.con-seleccion {
+    grid-template-columns: auto auto 1fr auto;
+}
+
+.evaluacion-item.seleccionada {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+}
+
+.evaluacion-item-acciones {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.casilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.casilla input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.barra-seleccion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+}
+
+.evaluacion-item-fecha {
+    font-weight: 600;
+    color: var(--txt1);
+}
+
+.evaluacion-item-meta {
+    font-size: 13px;
+    color: var(--txt3);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .graficas-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 860px) {
+    .filtro-criterios {
+        padding: 12px 0 12px 14px;
+    }
+
+    .filtro-criterios-encabezado,
+    .filtro-criterios-resumen {
+        padding-right: 14px;
+    }
+
+    /* Una sola fila desplazable, como los filtros de iOS */
+    .filtro-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 2px 14px 4px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filtro-chips::-webkit-scrollbar {
+        display: none;
+    }
+
+    .resumen-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resumen-tile-valor {
+        font-size: 24px;
+    }
+
+    .barra-acciones {
+        padding: 14px;
+    }
+
+    .barra-acciones-grupo {
+        width: 100%;
+    }
+
+    .barra-acciones-grupo > * {
+        flex: 1 1 0;
+    }
+
+    .selector-evaluacion {
+        max-width: none;
+    }
+
+    .brecha-fila {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "criterio criterio"
+            "escala estado";
+        row-gap: 8px;
+    }
+
+    .brecha-criterio {
+        grid-area: criterio;
+    }
+
+    .brecha-escala {
+        grid-area: escala;
+    }
+
+    .brecha-estado {
+        grid-area: estado;
+        justify-self: start;
+        min-width: 0;
+    }
+
+    .evaluacion-item {
+        grid-template-columns: auto 1fr;
+        padding: 14px;
+    }
+
+    .evaluacion-item-acciones {
+        grid-column: 1 / -1;
+    }
+
+    .evaluacion-item-acciones .btn-primary {
+        flex: 1;
+    }
+
+    .evaluacion-item.con-seleccion {
+        grid-template-columns: auto auto 1fr;
+    }
+
+    .barra-seleccion .barra-acciones-grupo {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+
+/* =========================================================
+   RESPUESTA DEL EVALUADO (columna opcional)
+   ========================================================= */
+
+.matriz-oma .col-respuesta {
+    min-width: 220px;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.matriz-respuesta {
+    padding: 6px 10px 6px 12px;
+    min-width: 220px;
+    max-width: 280px;
+    border-left: 1px solid var(--divider);
+    vertical-align: middle;
+}
+
+.respuesta-control {
+    display: grid;
+    gap: 6px;
+}
+
+.respuesta-select,
+.respuesta-otra {
+    min-height: 34px;
+    font-size: 13.5px;
+    border-radius: 9px;
+    background-color: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.respuesta-select {
+    padding: 6px 32px 6px 10px;
+    background-position: right 10px center;
+    text-overflow: ellipsis;
+}
+
+.respuesta-otra {
+    padding: 6px 10px;
+}
+
+.respuesta-lectura {
+    display: block;
+    font-size: 13px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.respuesta-lectura.vacia {
+    color: var(--txt3);
+}
+
+/* Móvil: ocupa todo el ancho de la tarjeta */
+.tarjeta-criterio .respuesta-control .form-select,
+.tarjeta-criterio .respuesta-control .campo-input {
+    min-height: 40px;
+    font-size: 15px;
+}

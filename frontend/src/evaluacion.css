@@ -1,0 +1,148 @@
+/* =========================================================
+   CAPTURA: LÍNEAS A EVALUAR Y PLANTA / OBJETIVO
+   ========================================================= */
+
+.selector-lineas {
+    padding: 14px 18px;
+    margin-bottom: 14px;
+}
+
+.selector-lineas-conteo {
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--txt2);
+}
+
+.selector-lineas-areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px 18px;
+    margin-top: 8px;
+}
+
+.selector-lineas-grupo {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+
+/* Nombre del área: elige o quita todas sus líneas */
+.selector-lineas-area {
+    justify-self: start;
+    padding: 2px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--txt3);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.selector-lineas-area:hover:not(:disabled) {
+    background: var(--fill);
+    color: var(--txt1);
+}
+
+.selector-lineas-area.activo {
+    color: var(--accent);
+}
+
+.filtro-chip:disabled,
+.selector-lineas-area:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Panel del administrador */
+
+.panel-niveles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    border-left: 3px solid var(--accent);
+}
+
+.panel-niveles .filtro-criterios-titulo {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.panel-niveles > div:first-child {
+    flex: 1 1 320px;
+}
+
+/* Planta / Objetivo bloqueados (los define el admin) */
+
+.chip.bloqueado {
+    position: relative;
+    cursor: not-allowed;
+}
+
+.chip.bloqueado::after {
+    content: "🔒";
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 10px;
+    line-height: 1;
+    filter: grayscale(1);
+    opacity: 0.75;
+}
+
+@media (max-width: 860px) {
+    .selector-lineas {
+        padding: 12px 14px;
+    }
+
+    .selector-lineas-areas {
+        grid-template-columns: 1fr;
+    }
+
+    .selector-lineas .filtro-chips {
+        flex-wrap: wrap;
+        overflow: visible;
+        padding: 0;
+    }
+
+    .panel-niveles .barra-acciones-grupo {
+        width: 100%;
+    }
+
+    .panel-niveles .btn-secondary {
+        flex: 1 1 auto;
+    }
+}
+
+
+/* Evaluador: líneas del calendario */
+
+.chip-hecha {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.sin-programacion {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 22px;
+    border-radius: var(--radius-lg);
+}
+
+.sin-programacion-icono {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.sin-programacion p {
+    margin: 6px 0 14px;
+    opacity: 0.8;
+    line-height: 1.5;
+}

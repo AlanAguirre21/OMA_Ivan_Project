@@ -1,0 +1,250 @@
+/* =========================================================
+   CALENDARIO DE EVALUACIONES
+   ========================================================= */
+
+.barra-calendario {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 12px 18px;
+    margin-bottom: 14px;
+}
+
+.mes-titulo {
+    min-width: 170px;
+    margin: 0;
+    text-align: center;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.leyenda-estados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+    color: var(--txt2);
+}
+
+.leyenda-estados span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Colores por estado (texto siempre oscuro, el color identifica) */
+.estado-punto-prog {
+    width: 10px;
+    height: 10px;
+    flex: none;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.estado-punto-prog.pendiente { background: #2a78d6; }
+.estado-punto-prog.parcial { background: #e09600; }
+.estado-punto-prog.realizada { background: #34c759; }
+.estado-punto-prog.vencida { background: #ff3b30; }
+
+/* Cuadrícula del mes */
+
+.calendario-mes {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    overflow: hidden;
+    padding: 0;
+}
+
+.calendario-cabecera {
+    padding: 8px 10px;
+    background: rgba(246, 246, 248, 0.85);
+    border-bottom: 1px solid var(--divider);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--txt2);
+    text-align: left;
+}
+
+.calendario-dia {
+    min-height: 112px;
+    padding: 6px;
+    border-right: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.calendario-dia:nth-child(7n) {
+    border-right: 0;
+}
+
+.calendario-dia.fuera {
+    background: rgba(120, 120, 128, 0.05);
+}
+
+.calendario-dia.fuera .calendario-numero {
+    color: var(--txt3);
+    opacity: 0.6;
+}
+
+.calendario-dia.editable {
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.calendario-dia.editable:hover {
+    background: rgba(0, 113, 227, 0.04);
+}
+
+.calendario-dia:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+}
+
+.calendario-numero {
+    align-self: flex-start;
+    min-width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt1);
+}
+
+.calendario-dia.hoy .calendario-numero {
+    background: var(--accent);
+    color: #fff;
+}
+
+.calendario-etiquetas {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.prog-etiqueta {
+    display: block;
+    width: 100%;
+    padding: 3px 7px;
+    border: 0;
+    border-left: 3px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    color: var(--txt1);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.prog-etiqueta.pendiente { background: rgba(42, 120, 214, 0.12); border-color: #2a78d6; }
+.prog-etiqueta.parcial { background: rgba(250, 178, 25, 0.2); border-color: #e09600; }
+.prog-etiqueta.realizada { background: rgba(52, 199, 89, 0.15); border-color: #34c759; }
+.prog-etiqueta.vencida { background: rgba(255, 59, 48, 0.12); border-color: #ff3b30; }
+
+.prog-etiqueta:hover {
+    filter: brightness(0.96);
+}
+
+/* Etiqueta de estado (texto) */
+
+.estado-prog {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--txt1);
+}
+
+.estado-prog.pendiente { background: rgba(42, 120, 214, 0.12); }
+.estado-prog.parcial { background: rgba(250, 178, 25, 0.22); }
+.estado-prog.realizada { background: rgba(52, 199, 89, 0.16); }
+.estado-prog.vencida { background: rgba(255, 59, 48, 0.12); }
+
+.detalle-programacion {
+    margin-top: 14px;
+}
+
+.detalle-programacion ul {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.detalle-programacion li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ventana-programar {
+    width: min(620px, 100%);
+}
+
+.fila-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0 12px;
+}
+
+/* Agenda (móvil) */
+
+.agenda {
+    display: grid;
+    gap: 10px;
+}
+
+.agenda-dia {
+    padding: 12px 14px;
+}
+
+.agenda-dia.hoy {
+    border-left: 3px solid var(--accent);
+}
+
+.agenda-fecha {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--txt2);
+}
+
+.agenda-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 4px;
+    border: 0;
+    border-top: 1px solid var(--divider);
+    background: transparent;
+    text-align: left;
+    color: var(--txt1);
+    cursor: pointer;
+}
+
+.agenda-lineas {
+    display: grid;
+    min-width: 0;
+}
+
+.agenda-lineas strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
